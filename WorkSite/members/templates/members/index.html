@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<ul class="list-articles">
+
+    {% for x in mmbrs %}
+    {% if x.is_public %}
+    <li><h2>{{ x.name }} - {{ x.position }}</h2>
+        {% autoescape off %}
+        <p>{{ x.reference|linebreaks|truncatewords:10 }}</p>
+        {% endautoescape %}
+        <div class="clear"></div>
+        <p class="link-read-post"><a href="{% url 'members' x.id %}">Читать справку-отзыв</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+
+{% endblock %}
+

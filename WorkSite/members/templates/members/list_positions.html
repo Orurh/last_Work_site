@@ -1,0 +1,7 @@
+{% for item in position %}
+{% if item.id == pos_selected %}
+<li class="selected">{{item.name}}</li>
+{% else %}
+<li><a href="{% url 'categories' item.id %}">{{item.name}}</a>
+{% endif %}
+{% endfor %}
