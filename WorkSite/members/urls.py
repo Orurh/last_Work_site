@@ -1,13 +1,15 @@
 from django.urls import path, include
 
-from . import admin, views
+from members import admin, views
 
 urlpatterns = [
-    path('', views.index, name='home'),
+    path('', views.MemberHome.as_view(), name='home'),
     path('about/', views.about, name='about'),
     path('login/', views.login, name='login'),
-    path('addpage/', views.addpage, name='addpage'),
+    path('addpage/', views.AddPage.as_view(), name='addpage'),
     path('contact/', views.contact, name='contact'),
-    path('members/<int:int_id>/', views.members, name='members'),
-    path('categories/<int:cat_id>/', views.categories, name='categories'),
+    path('members/<slug:post_slug>/', views.members, name='members'),
+    path('categories/<slug:cat_slug>/', views.MemerCategory.as_view(), name='categories'),
+    path('tag/<slug:tag_slug>/', views.MemberTag.as_view(), name='tag'),
 ]
+

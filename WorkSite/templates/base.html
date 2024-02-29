@@ -37,18 +37,20 @@
                     <!-- Sidebar слева -->
                     <td valign="top" class="left-chapters">
                         <ul id="leftchapters">
-                            {% if pos_selected == 0 or pos_selected is None %}
+                            {% if pos_selected == 0 %}
                             <li class="selected">Все категории</li>
                             {% else %}
                             <li><a href="{% url 'home' %}">Все категории</a>
-                            {% endif %}
-
-                            {% show_position pos_selected %}
+                                {% endif %}
+                                {% show_position pos_selected %}
                             <li class="share">
                                 <p>Наш канал</p>
                                 <a class="share-yt" href="https://u.armgs.team/profile/Ap6IBPtTZ3P-12Bx" target="_blank"
                                    rel="nofollow"></a>
                             </li>
+
+                            <li>{%show_tags%}</li>
+
                         </ul>
                     </td>
                     <!-- Конец Sidebar'а -->

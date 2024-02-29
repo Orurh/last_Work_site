@@ -1,7 +1,8 @@
 {% for item in position %}
 {% if item.id == pos_selected %}
-<li class="selected">{{item.name}}</li>
+<li class="selected">{{item.title}}</li>
 {% else %}
-<li><a href="{% url 'categories' item.id %}">{{item.name}}</a>
-{% endif %}
-{% endfor %}
+{# title - звание из модели Positions #}
+<li><a href="{{ item.get_absolute_url }}">{{item.title}}</a>
+    {% endif %}
+    {% endfor %}
