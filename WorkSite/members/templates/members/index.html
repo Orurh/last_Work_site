@@ -3,15 +3,19 @@
 <ul class="list-articles">
 
     {% for x in mmbrs %}
-    {% if x.is_public %}
+    <li>
+        <div class="article-panel">
+            <p class="first">Категория: {{x.pos.title}}</p>
+            <p class="last">Дата: {{x.time_updated|date:"d-m-Y H-m-s"}}</p>
+        </div>
     <li><h2>{{ x.name }} - {{ x.position }}</h2>
+    <li><h3>{{ x.time_created }}</h3>
         {% autoescape off %}
-        <p>{{ x.reference|linebreaks|truncatewords:10 }}</p>
+        <p>{{ x.reference|linebreaks|truncatewords:40 }}</p>
         {% endautoescape %}
         <div class="clear"></div>
-        <p class="link-read-post"><a href="{% url 'members' x.id %}">Читать справку-отзыв</a>
+        <p class="link-read-post"><a href="{{ x.get_absolute_url }}">Читать справку-отзыв</a>
     </li>
-    {% endif %}
     {% endfor %}
 </ul>
 

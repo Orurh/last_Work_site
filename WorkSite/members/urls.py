@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('addpage/', views.addpage, name='addpage'),
     path('contact/', views.contact, name='contact'),
-    path('members/<int:int_id>/', views.members, name='members'),
-    path('categories/<int:cat_id>/', views.categories, name='categories'),
+    path('members/<slug:post_slug>/', views.members, name='members'),
+    path('categories/<slug:cat_slug>/', views.categories, name='categories'),
+    path('tag/<slug:tag_slug>/', views.tags_list, name='tag'),
 ]
