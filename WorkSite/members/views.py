@@ -2,13 +2,15 @@ from django.http import HttpResponse, HttpResponseNotFound
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
 from members.forms import AddPostForm, UploadFileForm
 from members.models import Member, Positions, TagPost, UploadFiles
 import uuid
+
+from members.utils import DataMixin
 
 # Create your views here.
 
@@ -39,42 +41,54 @@ categors = [
 #     return render(request, 'members/index.html', date)
 
 
-class MemberHome(ListView):  # вместо функции index
+class MemberHome(DataMixin, ListView):  # вместо функции index
+
     # model = Member # для работы ListView необходимо передать модель, но она будет показывать все открытые и закрытые данные
     template_name = 'members/index.html'
     context_object_name = 'mmbrs'
-    extra_context = {
-        'title': 'Главная страница',
-        'menu': menu,
-        'pos_selected': 0,
-    }
+    title_page = 'Главная страница'
+    pos_selected = 0
+
 
     def get_queryset(self):
         return Member.published.all().select_related('pos')  # передаем определенный сет без Черноваика из модели Member
 
-    # class MemberHome(TemplateView):
-    #     template_name = 'members/index.html'
-    #     extra_context = {
-    #         'title': 'Главная страница',
-    #         'menu': menu,
-    #         'mmbrs': Member.published.all().select_related('pos'),
-    #         'pos_selected': 0,
-    #     }
+# class MemberHome(TemplateView):
+#     template_name = 'members/index.html'
+#     extra_context = {
+#         'title': 'Главная страница',
+#         'menu': menu,
+#         'mmbrs': Member.published.all().select_related('pos'),
+#         'pos_selected': 0,
+#     }
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['pos_selected'] = int(self.request.GET.get('pos_id', 0))
-    #     return context
+# def get_context_data(self, **kwargs):
+#     context = super().get_context_data(**kwargs)
+#     context['pos_selected'] = int(self.request.GET.get('pos_id', 0))
+#     return context
 
 
-def members(request, post_slug):
-    post = get_object_or_404(Member, slug=post_slug)
-    date = {'title': 'Главная страница',
-            'menu': menu,
-            'post': post,
-            'pos_selected': 1,
-            }
-    return render(request, 'members/member.html', date)
+# def members(request, post_slug):
+#     post = get_object_or_404(Member, slug=post_slug)
+#     date = {'title': 'Главная страница',
+#             'menu': menu,
+#             'post': post,
+#             'pos_selected': 1,
+#             }
+#     return render(request, 'members/member.html', date)
+
+class Members(DataMixin, DetailView):
+    template_name = 'members/member.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
+
+
+    def get_context_data(self, **kwargs):
+        context = super(Members, self).get_context_data(**kwargs)
+        return self.get_mixin_context(context, title = context['post'].name)
+
+    def get_object(self):
+        return get_object_or_404(Member.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
 # def categories(request, cat_slug):
@@ -87,10 +101,10 @@ def members(request, post_slug):
 #             }
 #     return render(request, 'members/index.html', date)
 
-class MemerCategory(ListView):
+class MemberCategory(ListView):
     template_name = 'members/index.html'
     context_object_name = 'mmbrs'
-    allow_empty = False #генерирует 404 при пустом списке
+    allow_empty = False  # генерирует 404 при пустом списке
 
     def get_queryset(self):
         return Member.published.filter(pos__slug=self.kwargs['cat_slug']).select_related('pos')
@@ -102,6 +116,7 @@ class MemerCategory(ListView):
         context['menu'] = menu
         context['pos_selected'] = cat.pk
         return context
+
 
 # def handle_uploaded_file(f):
 #     sec_name = str(uuid.uuid4())
@@ -131,6 +146,7 @@ def login(request):
     return HttpResponse(f'Авторизация')
 
 
+# ______________________________addpage___________________________________________
 # def addpage(request):
 #     if request.method == 'POST':
 #         form = AddPostForm(request.POST, request.FILES)
@@ -153,29 +169,68 @@ def login(request):
 #     }
 #     return render(request, 'members/addpage.html', context=date)
 
-class AddPage(View):
-    def get(self, request):
-        form = AddPostForm()
-        date = {
-            'menu': menu,
-            'title': 'Добавление статьи',
-            'form': form,
-        }
-        return render(request, 'members/addpage.html', context=date)
+class AddPage(DataMixin, CreateView):
+    # form_class = AddPostForm # Можно использовать класс форм,
+    # либо класс модели, при модели будет использоваться get_abcolute_url
+    model = Member
+    fields = '__all__' #можно выбрать поля при использовании класса модели (обязательные поля выбирать строго ВСЕ)
+    template_name = 'members/addpage.html'
+    # success_url = reverse_lazy('home')  # reverse_lazy выстраивает маршрут не сразу
+    title_page = 'Добавление статьи'
 
-    def post(self, request):
-        form = AddPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-        date = {
-            'menu': menu,
-            'title': 'Добавление статьи',
-            'form': form,
-        }
-        return render(request, 'members/addpage.html', context=date)
+class UpdatePage(DataMixin, UpdateView):
+    model = Member
+    fields = '__all__'
+    template_name = "members/addpage.html"
+    success_url = reverse_lazy('home')
+    title_page = 'Редактирование статьи'
+
+class DeletePage(DataMixin, DeleteView):
+    model = Member
+    fields = '__all__'
+    template_name = "members/delete_page.html"
+    success_url = reverse_lazy('home')
+    title_page = 'Удаление статьи'
+    # extra_context = {
+    #     'menu': menu,
+    #     'title': 'Удаление статьи',
+    # }
 
 
+# class AddPage(FormView): Пример использования FormView
+#     form_class = AddPostForm
+#     template_name = 'members/addpage.html'
+#     success_url = reverse_lazy('home')  # reverse_lazy выстраивает маршрут не сразу
+#     extra_context = {'menu': menu, 'title': 'Добавление статьи', }
+#
+#     def form_valid(self, form):
+#         form.save()
+#         return super().form_valid(form)
+
+
+# class AddPage(View): #Пример использования View
+#     def get(self, request):
+#         form = AddPostForm()
+#         date = {
+#             'menu': menu,
+#             'title': 'Добавление статьи',
+#             'form': form,
+#         }
+#         return render(request, 'members/addpage.html', context=date)
+#
+#     def post(self, request):
+#         form = AddPostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('home')
+#         date = {
+#             'menu': menu,
+#             'title': 'Добавление статьи',
+#             'form': form,
+#         }
+#         return render(request, 'members/addpage.html', context=date)
+
+#______________________________________________________________________________________________
 def contact(request):
     return HttpResponse(f'Обратная связь')
 
@@ -195,6 +250,7 @@ def tags_list(request, tag_slug):
             }
 
     return render(request, 'members/index.html', context=date)
+
 
 class MemberTag(ListView):
     template_name = 'members/index.html'
