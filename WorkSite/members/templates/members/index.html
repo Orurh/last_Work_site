@@ -8,9 +8,9 @@
             <p class="first">Категория: {{x.pos.title}}</p>
             <p class="last">Дата: {{x.time_updated|date:"d-m-Y H-m-s"}}</p>
         </div>
-{% if x.photo %}
+        {% if x.photo %}
         <p><img class="img-article-left thumb" src="{{x.photo.url}}"></p>
-{% endif %}
+        {% endif %}
     <li><h2>{{ x.name }} - {{ x.position }}</h2>
     <li><h3>{{ x.time_created }}</h3>
         {% autoescape off %}
@@ -24,3 +24,16 @@
 
 {% endblock %}
 
+{% block navigation %}
+{% if page_obj.has_other_pages %}
+<nav class="list-pages">
+    <ul>
+        {% for p in paginator.page_range %}
+        <li class="page-num">
+            <a href="?page={{ p }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

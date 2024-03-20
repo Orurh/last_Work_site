@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from django.core.paginator import Paginator
 
 from members.forms import AddPostForm, UploadFileForm
 from members.models import Member, Positions, TagPost, UploadFiles
@@ -15,13 +16,6 @@ from members.utils import DataMixin
 # Create your views here.
 
 
-menu = [{'title': 'Служба пожаротушения', 'url_name': 'home'},
-        {'title': 'Реагирование подразделений', 'url_name': 'fire_home'},
-        {'title': 'Добавить статью', 'url_name': 'addpage'},
-        {'title': 'Войти', 'url_name': 'login'},
-        {'title': 'О сайте', 'url_name': 'about'},
-        {'title': 'Обратная связь', 'url_name': 'contact'},
-        ]
 
 categors = [
     {'id': 1, 'name': 'Начальник СПТ'},
@@ -48,6 +42,7 @@ class MemberHome(DataMixin, ListView):  # вместо функции index
     context_object_name = 'mmbrs'
     title_page = 'Главная страница'
     pos_selected = 0
+    paginate_by = 5
 
 
     def get_queryset(self):
@@ -101,10 +96,11 @@ class Members(DataMixin, DetailView):
 #             }
 #     return render(request, 'members/index.html', date)
 
-class MemberCategory(ListView):
+class MemberCategory(DataMixin, ListView):
     template_name = 'members/index.html'
     context_object_name = 'mmbrs'
     allow_empty = False  # генерирует 404 при пустом списке
+
 
     def get_queryset(self):
         return Member.published.filter(pos__slug=self.kwargs['cat_slug']).select_related('pos')
@@ -112,10 +108,8 @@ class MemberCategory(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cat = context['mmbrs'][0].pos
-        context['title'] = 'Должность - ' + cat.title
-        context['menu'] = menu
-        context['pos_selected'] = cat.pk
-        return context
+        return self.get_mixin_context(context, title = 'Должность - ' + cat.title, pos_selected = cat.pk)
+
 
 
 # def handle_uploaded_file(f):
@@ -139,7 +133,7 @@ def about(request):
             # return redirect('about')
     else:
         form = UploadFileForm()
-    return render(request, 'members/about.html', {'title2': 'О сайте', 'menu': menu, 'form': form})
+    return render(request, 'members/about.html', {'title2': 'О сайте', 'form': form})
 
 
 def login(request):
@@ -239,20 +233,20 @@ def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена!</h1>')
 
 
-def tags_list(request, tag_slug):
-    tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.all()
+# def tags_list(request, tag_slug):
+#     tag = get_object_or_404(TagPost, slug=tag_slug)
+#     posts = tag.tags.all()
+#
+#     date = {'title': f'Тег: {tag.tag}',
+#             'menu': menu,
+#             'mmbrs': posts,
+#             'pos_selected': None,
+#             }
+#
+#     return render(request, 'members/index.html', context=date)
 
-    date = {'title': f'Тег: {tag.tag}',
-            'menu': menu,
-            'mmbrs': posts,
-            'pos_selected': None,
-            }
 
-    return render(request, 'members/index.html', context=date)
-
-
-class MemberTag(ListView):
+class MemberTag(DataMixin, ListView):
     template_name = 'members/index.html'
     context_object_name = 'mmbrs'
     allow_empty = False
@@ -263,7 +257,5 @@ class MemberTag(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         tag = context['mmbrs'][0].tags.all()[0]
-        context['title'] = f'Тег - {tag.tag}'
-        context['menu'] = menu
-        context['pos_selected'] = None
-        return context
+        return self.get_mixin_context(context, title = f'Тег - {tag.tag}')
+

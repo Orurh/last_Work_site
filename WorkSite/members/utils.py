@@ -8,6 +8,7 @@ menu = [{'title': 'Служба пожаротушения', 'url_name': 'home'}
 
 
 class DataMixin:
+    paginate_by = 3 # отображение количества записей на странице
     title_page = None
     pos_selected = None
     extra_context = {}
