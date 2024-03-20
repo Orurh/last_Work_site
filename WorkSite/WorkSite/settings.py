@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'debug_toolbar',
-    'members.apps.MembersConfig',
-    'fires.apps.MembersConfig',
-    'users.apps.MembersConfig',
+    'members',
+    'fires',
+    'users',
 ]
 
 MIDDLEWARE = [
