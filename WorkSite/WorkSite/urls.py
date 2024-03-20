@@ -24,6 +24,7 @@ from members.views import page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('members.urls')),
+    path('users/', include('users.urls', namespace="users")),
     path('fires/', include('fires.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
 ]

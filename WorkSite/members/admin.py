@@ -40,7 +40,6 @@ class MemberAdmin(admin.ModelAdmin):
 
 
 
-
     @admin.display(description='Изображение', ordering='id')  # декоратор, меняем название заголовка
     def post_photo(self, member: Member):  # добавляем столбец/поле в таблицу
         if member.photo:

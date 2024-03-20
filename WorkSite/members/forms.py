@@ -12,6 +12,7 @@ class AddPostForm(forms.ModelForm):
     class Meta:
         model = Member
         fields = ['name', 'photo', 'rank', 'position', 'reference', 'is_public', 'pos', 'duties', 'tags']
+        exclude =['author']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input'}),
             'reference': forms.Textarea(attrs={'cols': 40, 'rows': 4}),

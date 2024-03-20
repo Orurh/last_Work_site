@@ -2,7 +2,7 @@ import datetime
 from django.db import models
 from django.forms import ModelForm
 from autoslug import AutoSlugField
-from django.db.models import F
+from django.urls import reverse
 
 
 # Create your models here.
@@ -10,6 +10,7 @@ from django.db.models import F
 
 class Fire(models.Model):
     datetime = models.DateTimeField(default=datetime.datetime.now, verbose_name='Дата и время')
+    slug = AutoSlugField(populate_from='adress', max_length=255, unique=True, db_index=True, verbose_name='слаг')
     message_from = models.ForeignKey('MessageFrom', default=1,
                                      on_delete=models.PROTECT, related_name='message',
                                      verbose_name='Сообщение от')
@@ -31,6 +32,14 @@ class Fire(models.Model):
     gdzsunits = models.ForeignKey('GdzsUnits', default=1,
                             on_delete=models.PROTECT, related_name='gdzsunits',
                             verbose_name='Звенья ГДЗС')
+
+    class Meta:
+        verbose_name = 'Пожар'
+        verbose_name_plural = 'Пожары'
+
+    def get_absolute_url(self):
+        '''абсолютный URL, для использования слага из модели'''
+        return reverse('fire', kwargs={'fire_slug': self.slug})
 
 
 class MessageFrom(models.Model):  # откуда поступило сообщение
@@ -62,7 +71,7 @@ class LastRtp(models.Model):
     slug = AutoSlugField(populate_from='lastrtp', unique=True, db_index=True)
 
     def __str__(self):
-        return self.rtplast
+        return self.lastrtp
 
 
 class GdzsUnits(models.Model):

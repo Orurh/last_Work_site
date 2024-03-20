@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -72,6 +73,7 @@ class MemberHome(DataMixin, ListView):  # вместо функции index
 #             }
 #     return render(request, 'members/member.html', date)
 
+
 class Members(DataMixin, DetailView):
     template_name = 'members/member.html'
     slug_url_kwarg = 'post_slug'
@@ -122,7 +124,7 @@ class MemberCategory(DataMixin, ListView):
 # в def about(request):
 # if form.is_valid():
 # handle_uploaded_file(form.cleaned_data['file'])  # <p><input type="file" name="file_upload"></p>
-
+@login_required #перенаправление если не залогинен для функций
 def about(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -163,14 +165,19 @@ def login(request):
 #     }
 #     return render(request, 'members/addpage.html', context=date)
 
-class AddPage(DataMixin, CreateView):
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     # form_class = AddPostForm # Можно использовать класс форм,
     # либо класс модели, при модели будет использоваться get_abcolute_url
     model = Member
-    fields = '__all__' #можно выбрать поля при использовании класса модели (обязательные поля выбирать строго ВСЕ)
+    fields = ['name', 'photo', 'rank', 'position', 'reference', 'is_public', 'pos', 'duties', 'tags', 'duties'] #можно выбрать поля при использовании класса модели (обязательные поля выбирать строго ВСЕ)
     template_name = 'members/addpage.html'
     # success_url = reverse_lazy('home')  # reverse_lazy выстраивает маршрут не сразу
     title_page = 'Добавление статьи'
+
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
 
 class UpdatePage(DataMixin, UpdateView):
     model = Member

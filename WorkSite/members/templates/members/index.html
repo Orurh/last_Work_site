@@ -5,7 +5,8 @@
     {% for x in mmbrs %}
     <li>
         <div class="article-panel">
-            <p class="first">Категория: {{x.pos.title}}</p>
+            <p class="first">Категория: {{x.pos.title}} | Автор:
+                {{x.author.username|default:"неизвестен"}}</p>
             <p class="last">Дата: {{x.time_updated|date:"d-m-Y H-m-s"}}</p>
         </div>
         {% if x.photo %}

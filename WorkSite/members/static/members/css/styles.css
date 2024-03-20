@@ -41,6 +41,8 @@ p.link-read-post a {
 	text-decoration: none;
 }
 
+
+
 div.article-panel {
     background: #eee;
     padding: 5px 10px 5px 10px;
@@ -109,6 +111,10 @@ ul.mainmenu li a {
 ul.mainmenu li a:hover {
 	color: #FDA83D;
 }
+
+
+
+
 
 .panelitems {
 	text-align: center;
@@ -408,6 +414,7 @@ ul.lang-list li a:hover {color: #fdc073;}
     font-size: 16px;
 }
 
+
 .list-pages {
    text-align: center;
    margin: 0 0 20px 0;
@@ -452,3 +459,38 @@ ul.lang-list li a:hover {color: #fdc073;}
 .list-pages .page-num-selected:hover {
    box-shadow: none;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* Высота контейнера займет 100% высоты видимой области */
+}
+
+.container_links {
+  display: flex;
+  justify-content: space-around;
+  width: 30%; /* Ширина блока ссылок будет 80% от родительского контейнера */
+}
+
+.container_link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70mm; /* Ширина каждой ссылки будет 150 пикселей */
+  height: 40mm; /* Высота каждой ссылки будет 100 пикселей */
+  background-color: #ccc; /* Цвет фона ссылок */
+  border-radius: 5px; /* Скругление углов ссылок */
+  text-align: center; /* Выравнивание текста по центру ссылок */
+  text-decoration: none; /* Убираем подчеркивание у ссылок */
+  color: #000; /* Цвет текста ссылок */
+  font-size: 32px; /* Размер текста ссылок */
+  margin: 10px;
+}
+
+
+.container_link:hover {
+  background-color: #aaa; /* Цвет фона ссылок при наведении курсора */
+  color: #CC0000; /* Цвет текста ссылок при наведении курсора */
+}
+

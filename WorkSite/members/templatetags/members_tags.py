@@ -1,9 +1,13 @@
 from django import template
 import members.views as views
 from members.models import Positions, TagPost
+from members.utils import menu
 
 register = template.Library()
 
+@register.simple_tag
+def get_menu():
+    return menu
 
 @register.inclusion_tag('members/list_positions.html')
 def show_position(pos_selected=0):

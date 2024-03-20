@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from autoslug import AutoSlugField
+from django.contrib.auth import get_user_model
 
 
 class PublishedManager(models.Manager):
@@ -29,6 +30,8 @@ class Member(models.Model):
     tags = models.ManyToManyField('TagPost', blank=True, related_name='tags', verbose_name='Тэги')
     duties = models.OneToOneField('Duties', on_delete=models.SET_NULL, null=True, blank=True, related_name='memb',
                                   verbose_name='Исполняемая должность')
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='author', null=True,
+                               default=None)
 
     objects = models.Manager()
     # если не определить, то перестает работать после добавления PublishedManager(), так же лучше прописывать
