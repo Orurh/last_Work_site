@@ -1,0 +1,21 @@
+
+kpython:S1192*"SDefine a constant instead of duplicating this literal 'members/index.html' 3 times.(’ÊÅ
+;python:S125"Remove this commented out code.(´ïÔÙüÿÿÿÿ
+6python:S125)"Remove this commented out code.(ÇØÈï
+;python:S1254"Remove this commented out code.(ŸØÑØùÿÿÿÿ
+;python:S125="Remove this commented out code.(èƒ”íüÿÿÿÿ
+;python:S125C"Remove this commented out code.(Û›úÿÿÿÿ
+6python:S125["Remove this commented out code.(°¯¬‹
+;python:S125u"Remove this commented out code.(â™òÿÿÿÿÿ
+<python:S125‡"Remove this commented out code.(ÆÉøèúÿÿÿÿ
+Mpython:S1172"/Remove the unused function parameter "request".(ññ™Ùøÿÿÿÿ
+^python:S3457"EAdd replacement fields or use a normal string instead of an f-string.(öÂû”
+<python:S125‘"Remove this commented out code.(§·—ıÿÿÿÿ
+<python:S125®"Remove this commented out code.(óÄşıÿÿÿÿ
+<python:S125Ã"Remove this commented out code.(÷á½Âøÿÿÿÿ
+<python:S125Ô"Remove this commented out code.(ÕáÀÖùÿÿÿÿ
+Mpython:S1172ë"/Remove the unused function parameter "request".(¸Æ‚ßıÿÿÿÿ
+cpython:S3457ì"EAdd replacement fields or use a normal string instead of an f-string.(‘¦£Íüÿÿÿÿ
+Mpython:S1172ï"/Remove the unused function parameter "request".(îúì’ıÿÿÿÿ
+Opython:S1172ï"1Remove the unused function parameter "exception".(îúì’ıÿÿÿÿ
+<python:S125ó"Remove this commented out code.(Ìä–¹ıÿÿÿÿ

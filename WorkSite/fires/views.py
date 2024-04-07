@@ -24,5 +24,6 @@ class FireHome(ListView):  # вместо функции index
 #
     model = Fire # для работы ListView необходимо передать модель, но она будет показывать все открытые и закрытые данные
     template_name = 'fires/fire.html'
-#     title_page = 'Главная страница'
+    context_object_name = 'fires_list'
+    title_page = 'Главная страница'
 

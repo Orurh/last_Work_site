@@ -5,5 +5,5 @@ from .views import FireHome
 
 urlpatterns = [
     path('', views.index, name='fire_home'),
-    path('fire/<slug:fire_slug>/', FireHome.as_view(), name='fire')
+    path('<slug:fire_slug>/', FireHome.as_view(), name='fires')
 ]

@@ -10,7 +10,7 @@ from django.urls import reverse
 
 class Fire(models.Model):
     datetime = models.DateTimeField(default=datetime.datetime.now, verbose_name='Дата и время')
-    slug = AutoSlugField(populate_from='adress', max_length=255, unique=True, db_index=True, verbose_name='слаг')
+    slug = AutoSlugField(populate_from='datetime', max_length=255, unique=True, db_index=True, verbose_name='слаг')
     message_from = models.ForeignKey('MessageFrom', default=1,
                                      on_delete=models.PROTECT, related_name='message',
                                      verbose_name='Сообщение от')

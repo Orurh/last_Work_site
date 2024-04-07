@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for item in fires_list %}
+<p>{{ item.id }}| {{ item.datetime }}, {{ item.adress }}, {{ item.fire_area}} </p>
+{% endfor %}
+{% endblock %}
